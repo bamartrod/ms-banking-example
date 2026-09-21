@@ -1,0 +1,14 @@
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/MonolithApplicationTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/MonolithSmokeTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/account/web/AccountApiControllerTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/architecture/AssemblyArchitectureTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/architecture/CohesionTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/architecture/HexagonalArchitectureTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/architecture/ModularityArchitectureTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/cases/web/CasesApiControllerTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/client/web/ClientApiControllerTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/client/web/EnrichmentApiControllerTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/client/web/legacy/LegacyClientXmlControllerTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/marketing/web/MarketingApiControllerTest.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/platform/integration/siebel/InMemorySiebelAdapter.java
+/home/bamartrod/Proyectos/banco-boogota/refactor/monolith/src/test/java/com/bamartrod/monolith/sales/web/SalesApiControllerTest.java

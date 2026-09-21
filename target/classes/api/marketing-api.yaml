@@ -1,0 +1,285 @@
+openapi: 3.0.3
+info:
+  title: Marketing API — marketing, prospect, campaign
+  description: Marketing API — marketing, prospect, campaign — bounded context marketing. Hexagonal monolith.
+  version: 1.0.0
+  contact:
+    name: Platform Team — Banco de Bogotá
+    url: https://github.com/banco-bogota/monolith
+    email: platform@bancodebogota.com.co
+  x-implemented-by: com.bamartrod.monolith.interfaces.marketing.api
+  x-governance:
+    owner: platform
+    domain: marketing
+    lifecycle: active
+servers:
+  - url: /api/v1/marketing
+    description: Modular monolith server (env-driven)
+security:
+  - BearerAuth: [marketing:read]
+paths:
+  /{id}/marketing:
+    get:
+      operationId: getMarketing
+      tags: [Marketing]
+      summary: Get marketing
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[A-Za-z0-9_-]{1,64}$' }
+        - $ref: '#/components/parameters/TraceHeader'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Marketing' }
+              examples:
+                success:
+                  $ref: '#/components/examples/MarketingSuccess'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                badRequest:
+                  $ref: '#/components/examples/BadRequestExample'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                unauthorized:
+                  $ref: '#/components/examples/UnauthorizedExample'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                notFound:
+                  $ref: '#/components/examples/NotFoundExample'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                internalError:
+                  $ref: '#/components/examples/InternalServerErrorExample'
+  /{id}/prospect:
+    get:
+      operationId: getProspect
+      tags: [Marketing]
+      summary: Get prospect
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[A-Za-z0-9_-]{1,64}$' }
+        - $ref: '#/components/parameters/TraceHeader'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Prospect' }
+              examples:
+                success:
+                  $ref: '#/components/examples/ProspectSuccess'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                badRequest:
+                  $ref: '#/components/examples/BadRequestExample'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                unauthorized:
+                  $ref: '#/components/examples/UnauthorizedExample'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                notFound:
+                  $ref: '#/components/examples/NotFoundExample'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                internalError:
+                  $ref: '#/components/examples/InternalServerErrorExample'
+  /{id}/campaign:
+    get:
+      operationId: getCampaign
+      tags: [Marketing]
+      summary: Get campaign
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[A-Za-z0-9_-]{1,64}$' }
+        - $ref: '#/components/parameters/TraceHeader'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Campaign' }
+              examples:
+                success:
+                  $ref: '#/components/examples/CampaignSuccess'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                badRequest:
+                  $ref: '#/components/examples/BadRequestExample'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                unauthorized:
+                  $ref: '#/components/examples/UnauthorizedExample'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                notFound:
+                  $ref: '#/components/examples/NotFoundExample'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                internalError:
+                  $ref: '#/components/examples/InternalServerErrorExample'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Bearer (OAuth2 clientCredentials) — scopes marketing:read.
+  parameters:
+    TraceHeader:
+      name: X-Correlation-Id
+      in: header
+      required: false
+      description: Distributed tracing correlation ID.
+      schema:
+        type: string
+        example: 550e8400-e29b-41d4-a716-446655440000
+  schemas:
+    Marketing:
+      type: object
+      required: [clientId, correlationId, campaignId, segment]
+      properties:
+        clientId: { type: string, example: "123" }
+        correlationId: { type: string }
+        campaignId: { type: string, example: "CAMP-001" }
+        segment: { type: string, example: "PREMIUM" }
+    Prospect:
+      type: object
+      required: [clientId, correlationId, prospectId, stage]
+      properties:
+        clientId: { type: string }
+        correlationId: { type: string }
+        prospectId: { type: string, example: "PROS-123" }
+        stage: { type: string, example: "STAGE_1" }
+    Campaign:
+      type: object
+      required: [clientId, correlationId, campaignCode, description]
+      properties:
+        clientId: { type: string }
+        correlationId: { type: string }
+        campaignCode: { type: string, example: "CAMP-001" }
+        description: { type: string, example: "Summer 2026 premium campaign" }
+    ErrorResponse:
+      type: object
+      required: [category, code, message]
+      properties:
+        category: { type: string, example: "NOT_FOUND" }
+        code: { type: string, example: "MSOC_01" }
+        message: { type: string, example: "Data does not exist for id 123" }
+        description: { type: string }
+        timestamp: { type: string, format: date-time }
+        traceId: { type: string, format: uuid }
+  examples:
+    MarketingSuccess:
+      summary: 200 — Marketing found
+      value:
+        clientId: "123"
+        correlationId: "550e8400-e29b-41d4-a716-446655440000"
+        campaignId: "CAMP-001"
+        segment: "PREMIUM"
+    ProspectSuccess:
+      summary: 200 — Prospect found
+      value:
+        clientId: "123"
+        correlationId: "550e8400-e29b-41d4-a716-446655440000"
+        prospectId: "PROS-123"
+        stage: "STAGE_1"
+    CampaignSuccess:
+      summary: 200 — Campaign found
+      value:
+        clientId: "123"
+        correlationId: "550e8400-e29b-41d4-a716-446655440000"
+        campaignCode: "CAMP-001"
+        description: "Summer 2026 premium campaign"
+    BadRequestExample:
+      summary: 400 — Bad Request
+      value:
+        category: "VALIDATION"
+        code: "BAD_REQUEST"
+        message: "Invalid id format"
+        description: "Path parameter id failed validation."
+        timestamp: "2026-09-19T12:00:00Z"
+        traceId: "550e8400-e29b-41d4-a716-446655440000"
+    UnauthorizedExample:
+      summary: 401 — Unauthorized
+      value:
+        category: "AUTHENTICATION"
+        code: "UNAUTHORIZED"
+        message: "Bearer token missing or expired"
+        description: "Provide Authorization: Bearer <JWT> with scope marketing:read."
+        timestamp: "2026-09-19T12:00:00Z"
+        traceId: "550e8400-e29b-41d4-a716-446655440000"
+    NotFoundExample:
+      summary: 404 — Not Found
+      value:
+        category: "NOT_FOUND"
+        code: "MSOC_01"
+        message: "Data does not exist for id 123"
+        description: "No marketing record found."
+        timestamp: "2026-09-19T12:00:00Z"
+        traceId: "550e8400-e29b-41d4-a716-446655440000"
+    InternalServerErrorExample:
+      summary: 500 — System error
+      value:
+        category: "SYSTEM"
+        code: "INTERNAL_ERROR"
+        message: "Unexpected system error"
+        description: "Contact platform team with traceId."
+        timestamp: "2026-09-19T12:00:00Z"
+        traceId: "550e8400-e29b-41d4-a716-446655440000"

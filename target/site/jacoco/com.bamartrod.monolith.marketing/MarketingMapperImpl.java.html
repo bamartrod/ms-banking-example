@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MarketingMapperImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Modular Monolith - Java 25 (Screaming)</a> &gt; <a href="index.source.html" class="el_package">com.bamartrod.monolith.marketing</a> &gt; <span class="el_source">MarketingMapperImpl.java</span></div><h1>MarketingMapperImpl.java</h1><pre class="source lang-java linenums">package com.bamartrod.monolith.marketing;
+
+import com.bamartrod.monolith.interfaces.marketing.api.model.Campaign;
+import com.bamartrod.monolith.interfaces.marketing.api.model.Marketing;
+import com.bamartrod.monolith.interfaces.marketing.api.model.Prospect;
+import javax.annotation.processing.Generated;
+import org.springframework.stereotype.Component;
+
+@Generated(
+    value = &quot;org.mapstruct.ap.MappingProcessor&quot;,
+    date = &quot;2026-09-21T09:36:18-0500&quot;,
+    comments = &quot;version: 1.6.3, compiler: javac, environment: Java 25.0.4.1 (Arch Linux)&quot;
+)
+@Component
+<span class="fc" id="L15">public class MarketingMapperImpl implements MarketingMapper {</span>
+
+    @Override
+    public Marketing toApi(MarketingModels.Marketing domain) {
+<span class="pc bpc" id="L19" title="1 of 2 branches missed.">        if ( domain == null ) {</span>
+<span class="nc" id="L20">            return null;</span>
+        }
+
+<span class="fc" id="L23">        Marketing marketing = new Marketing();</span>
+
+<span class="fc" id="L25">        marketing.setClientId( domain.clientId() );</span>
+<span class="fc" id="L26">        marketing.setCorrelationId( domain.correlationId() );</span>
+<span class="fc" id="L27">        marketing.setCampaignId( domain.campaignId() );</span>
+<span class="fc" id="L28">        marketing.setSegment( domain.segment() );</span>
+
+<span class="fc" id="L30">        return marketing;</span>
+    }
+
+    @Override
+    public Prospect toApi(MarketingModels.Prospect domain) {
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">        if ( domain == null ) {</span>
+<span class="nc" id="L36">            return null;</span>
+        }
+
+<span class="fc" id="L39">        Prospect prospect = new Prospect();</span>
+
+<span class="fc" id="L41">        prospect.setClientId( domain.clientId() );</span>
+<span class="fc" id="L42">        prospect.setCorrelationId( domain.correlationId() );</span>
+<span class="fc" id="L43">        prospect.setProspectId( domain.prospectId() );</span>
+<span class="fc" id="L44">        prospect.setStage( domain.stage() );</span>
+
+<span class="fc" id="L46">        return prospect;</span>
+    }
+
+    @Override
+    public Campaign toApi(MarketingModels.Campaign domain) {
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">        if ( domain == null ) {</span>
+<span class="nc" id="L52">            return null;</span>
+        }
+
+<span class="fc" id="L55">        Campaign campaign = new Campaign();</span>
+
+<span class="fc" id="L57">        campaign.setClientId( domain.clientId() );</span>
+<span class="fc" id="L58">        campaign.setCorrelationId( domain.correlationId() );</span>
+<span class="fc" id="L59">        campaign.setCampaignCode( domain.campaignCode() );</span>
+<span class="fc" id="L60">        campaign.setDescription( domain.description() );</span>
+
+<span class="fc" id="L62">        return campaign;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

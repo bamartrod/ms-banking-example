@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HttpSiebelAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Modular Monolith - Java 25 (Screaming)</a> &gt; <a href="index.source.html" class="el_package">com.bamartrod.monolith.platform.integration.siebel</a> &gt; <span class="el_source">HttpSiebelAdapter.java</span></div><h1>HttpSiebelAdapter.java</h1><pre class="source lang-java linenums">package com.bamartrod.monolith.platform.integration.siebel;
+
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
+/**
+ * Anti-corruption layer for Siebel integration — HttpSiebelAdapter.
+ *
+ * @author Brandon Martinez
+ */
+
+
+@Component
+@Profile(&quot;!test&quot;)
+
+public class HttpSiebelAdapter implements SiebelGateway {
+
+<span class="nc" id="L22">    private static final Logger log = LoggerFactory.getLogger(HttpSiebelAdapter.class);</span>
+    private final RestClient restClient;
+
+    public HttpSiebelAdapter(RestClient.Builder builder,
+<span class="nc" id="L26">                             @Value(&quot;${siebel.base-url:http://siebel.local}&quot;) String baseUrl) {</span>
+<span class="nc" id="L27">        this.restClient = builder.baseUrl(baseUrl).build();</span>
+<span class="nc" id="L28">    }</span>
+
+    @Override
+    public Optional&lt;SiebelRecord&gt; fetchCase(String clientId) {
+        try {
+<span class="nc" id="L33">            var record = restClient.get()</span>
+<span class="nc" id="L34">                    .uri(&quot;/cases/{id}&quot;, clientId)</span>
+<span class="nc" id="L35">                    .retrieve()</span>
+<span class="nc" id="L36">                    .body(SiebelRecord.class);</span>
+<span class="nc" id="L37">            return Optional.ofNullable(record);</span>
+<span class="nc" id="L38">        } catch (Exception e) {</span>
+<span class="nc" id="L39">            log.warn(&quot;Siebel fetchCase failed for {}: {}&quot;, clientId, e.getMessage());</span>
+<span class="nc" id="L40">            return Optional.empty();</span>
+        }
+    }
+
+    @Override
+    public Optional&lt;SiebelRecord&gt; fetchMarketing(String clientId) {
+        try {
+<span class="nc" id="L47">            var record = restClient.get()</span>
+<span class="nc" id="L48">                    .uri(&quot;/marketing/{id}&quot;, clientId)</span>
+<span class="nc" id="L49">                    .retrieve()</span>
+<span class="nc" id="L50">                    .body(SiebelRecord.class);</span>
+<span class="nc" id="L51">            return Optional.ofNullable(record);</span>
+<span class="nc" id="L52">        } catch (Exception e) {</span>
+<span class="nc" id="L53">            log.warn(&quot;Siebel fetchMarketing failed for {}: {}&quot;, clientId, e.getMessage());</span>
+<span class="nc" id="L54">            return Optional.empty();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

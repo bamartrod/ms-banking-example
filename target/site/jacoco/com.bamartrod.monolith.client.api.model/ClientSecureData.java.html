@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientSecureData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Modular Monolith - Java 25 (Screaming)</a> &gt; <a href="index.source.html" class="el_package">com.bamartrod.monolith.client.api.model</a> &gt; <span class="el_source">ClientSecureData.java</span></div><h1>ClientSecureData.java</h1><pre class="source lang-java linenums">package com.bamartrod.monolith.client.api.model;
+
+import java.net.URI;
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * ClientSecureData
+ */
+
+@Generated(value = &quot;org.openapitools.codegen.languages.SpringCodegen&quot;, date = &quot;2026-09-21T09:36:10.147188854-05:00[America/Bogota]&quot;, comments = &quot;Generator version: 7.8.0&quot;)
+public class ClientSecureData {
+
+  private String clientId;
+
+  private String correlationId;
+
+  private String maskedAccount;
+
+  private String status;
+
+  public ClientSecureData() {
+<span class="fc" id="L32">    super();</span>
+<span class="fc" id="L33">  }</span>
+
+  /**
+   * Constructor with only required parameters
+   */
+<span class="nc" id="L38">  public ClientSecureData(String clientId, String correlationId, String maskedAccount, String status) {</span>
+<span class="nc" id="L39">    this.clientId = clientId;</span>
+<span class="nc" id="L40">    this.correlationId = correlationId;</span>
+<span class="nc" id="L41">    this.maskedAccount = maskedAccount;</span>
+<span class="nc" id="L42">    this.status = status;</span>
+<span class="nc" id="L43">  }</span>
+
+  public ClientSecureData clientId(String clientId) {
+<span class="nc" id="L46">    this.clientId = clientId;</span>
+<span class="nc" id="L47">    return this;</span>
+  }
+
+  /**
+   * Get clientId
+   * @return clientId
+   */
+  @NotNull 
+  @Schema(name = &quot;clientId&quot;, example = &quot;123&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty(&quot;clientId&quot;)
+  public String getClientId() {
+<span class="fc" id="L58">    return clientId;</span>
+  }
+
+  public void setClientId(String clientId) {
+<span class="fc" id="L62">    this.clientId = clientId;</span>
+<span class="fc" id="L63">  }</span>
+
+  public ClientSecureData correlationId(String correlationId) {
+<span class="nc" id="L66">    this.correlationId = correlationId;</span>
+<span class="nc" id="L67">    return this;</span>
+  }
+
+  /**
+   * Get correlationId
+   * @return correlationId
+   */
+  @NotNull 
+  @Schema(name = &quot;correlationId&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty(&quot;correlationId&quot;)
+  public String getCorrelationId() {
+<span class="fc" id="L78">    return correlationId;</span>
+  }
+
+  public void setCorrelationId(String correlationId) {
+<span class="fc" id="L82">    this.correlationId = correlationId;</span>
+<span class="fc" id="L83">  }</span>
+
+  public ClientSecureData maskedAccount(String maskedAccount) {
+<span class="nc" id="L86">    this.maskedAccount = maskedAccount;</span>
+<span class="nc" id="L87">    return this;</span>
+  }
+
+  /**
+   * Get maskedAccount
+   * @return maskedAccount
+   */
+  @NotNull 
+  @Schema(name = &quot;maskedAccount&quot;, example = &quot;***1234&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty(&quot;maskedAccount&quot;)
+  public String getMaskedAccount() {
+<span class="fc" id="L98">    return maskedAccount;</span>
+  }
+
+  public void setMaskedAccount(String maskedAccount) {
+<span class="fc" id="L102">    this.maskedAccount = maskedAccount;</span>
+<span class="fc" id="L103">  }</span>
+
+  public ClientSecureData status(String status) {
+<span class="nc" id="L106">    this.status = status;</span>
+<span class="nc" id="L107">    return this;</span>
+  }
+
+  /**
+   * Get status
+   * @return status
+   */
+  @NotNull 
+  @Schema(name = &quot;status&quot;, example = &quot;ACTIVE&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty(&quot;status&quot;)
+  public String getStatus() {
+<span class="fc" id="L118">    return status;</span>
+  }
+
+  public void setStatus(String status) {
+<span class="fc" id="L122">    this.status = status;</span>
+<span class="fc" id="L123">  }</span>
+
+  @Override
+  public boolean equals(Object o) {
+<span class="nc bnc" id="L127" title="All 2 branches missed.">    if (this == o) {</span>
+<span class="nc" id="L128">      return true;</span>
+    }
+<span class="nc bnc" id="L130" title="All 4 branches missed.">    if (o == null || getClass() != o.getClass()) {</span>
+<span class="nc" id="L131">      return false;</span>
+    }
+<span class="nc" id="L133">    ClientSecureData clientSecureData = (ClientSecureData) o;</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">    return Objects.equals(this.clientId, clientSecureData.clientId) &amp;&amp;</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        Objects.equals(this.correlationId, clientSecureData.correlationId) &amp;&amp;</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        Objects.equals(this.maskedAccount, clientSecureData.maskedAccount) &amp;&amp;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        Objects.equals(this.status, clientSecureData.status);</span>
+  }
+
+  @Override
+  public int hashCode() {
+<span class="nc" id="L142">    return Objects.hash(clientId, correlationId, maskedAccount, status);</span>
+  }
+
+  @Override
+  public String toString() {
+<span class="nc" id="L147">    StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L148">    sb.append(&quot;class ClientSecureData {\n&quot;);</span>
+<span class="nc" id="L149">    sb.append(&quot;    clientId: &quot;).append(toIndentedString(clientId)).append(&quot;\n&quot;);</span>
+<span class="nc" id="L150">    sb.append(&quot;    correlationId: &quot;).append(toIndentedString(correlationId)).append(&quot;\n&quot;);</span>
+<span class="nc" id="L151">    sb.append(&quot;    maskedAccount: &quot;).append(toIndentedString(maskedAccount)).append(&quot;\n&quot;);</span>
+<span class="nc" id="L152">    sb.append(&quot;    status: &quot;).append(toIndentedString(status)).append(&quot;\n&quot;);</span>
+<span class="nc" id="L153">    sb.append(&quot;}&quot;);</span>
+<span class="nc" id="L154">    return sb.toString();</span>
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(Object o) {
+<span class="nc bnc" id="L162" title="All 2 branches missed.">    if (o == null) {</span>
+<span class="nc" id="L163">      return &quot;null&quot;;</span>
+    }
+<span class="nc" id="L165">    return o.toString().replace(&quot;\n&quot;, &quot;\n    &quot;);</span>
+  }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MarketingApiController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Modular Monolith - Java 25 (Screaming)</a> &gt; <a href="index.source.html" class="el_package">com.bamartrod.monolith.marketing.web</a> &gt; <span class="el_source">MarketingApiController.java</span></div><h1>MarketingApiController.java</h1><pre class="source lang-java linenums">package com.bamartrod.monolith.marketing.web;
+
+import com.bamartrod.monolith.interfaces.marketing.api.MarketingApi;
+import com.bamartrod.monolith.marketing.MarketingMapper;
+import com.bamartrod.monolith.marketing.MarketingService;
+import com.bamartrod.monolith.platform.kernel.CorrelationId;
+import com.bamartrod.monolith.platform.web.CorrelationContext;
+import com.bamartrod.monolith.platform.web.ResponseDispatcher;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+/**
+ * REST controller for MarketingApi bounded context. Handles HTTP requests and delegates to application use cases.
+ *
+ * @author Brandon Martinez
+ */
+
+@RestController
+@RequestMapping(&quot;/api/v1/marketing&quot;)
+
+public class MarketingApiController implements MarketingApi {
+    private final MarketingService service;
+    private final MarketingMapper mapper;
+<span class="fc" id="L24">    public MarketingApiController(MarketingService service, MarketingMapper mapper){this.service=service; this.mapper=mapper;}</span>
+    @Override public ResponseEntity&lt;com.bamartrod.monolith.interfaces.marketing.api.model.Marketing&gt; getMarketing(String id, String xCorrelationId){
+<span class="fc" id="L26">        var cid=CorrelationContext.resolve(xCorrelationId);</span>
+<span class="fc" id="L27">        return ResponseDispatcher.dispatch(service.findMarketing(id,cid),cid,mapper::toApi);</span>
+    }
+    @Override public ResponseEntity&lt;com.bamartrod.monolith.interfaces.marketing.api.model.Prospect&gt; getProspect(String id, String xCorrelationId){
+<span class="fc" id="L30">        var cid=CorrelationContext.resolve(xCorrelationId);</span>
+<span class="fc" id="L31">        return ResponseDispatcher.dispatch(service.findProspect(id,cid),cid,mapper::toApi);</span>
+    }
+    @Override public ResponseEntity&lt;com.bamartrod.monolith.interfaces.marketing.api.model.Campaign&gt; getCampaign(String id, String xCorrelationId){
+<span class="fc" id="L34">        var cid=CorrelationContext.resolve(xCorrelationId);</span>
+<span class="fc" id="L35">        return ResponseDispatcher.dispatch(service.findCampaign(id,cid),cid,mapper::toApi);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

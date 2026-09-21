@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CasesApiController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Modular Monolith - Java 25 (Screaming)</a> &gt; <a href="index.source.html" class="el_package">com.bamartrod.monolith.cases.web</a> &gt; <span class="el_source">CasesApiController.java</span></div><h1>CasesApiController.java</h1><pre class="source lang-java linenums">package com.bamartrod.monolith.cases.web;
+
+import com.bamartrod.monolith.cases.CasesMapper;
+import com.bamartrod.monolith.cases.CasesService;
+import com.bamartrod.monolith.interfaces.cases.api.CasesApi;
+import com.bamartrod.monolith.platform.kernel.CorrelationId;
+import com.bamartrod.monolith.platform.web.CorrelationContext;
+import com.bamartrod.monolith.platform.web.ResponseDispatcher;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+/**
+ * REST controller for CasesApi bounded context. Handles HTTP requests and delegates to application use cases.
+ *
+ * @author Brandon Martinez
+ */
+
+@RestController
+@RequestMapping(&quot;/api/v1/cases&quot;)
+
+public class CasesApiController implements CasesApi {
+    private final CasesService service;
+    private final CasesMapper mapper;
+<span class="fc" id="L24">    public CasesApiController(CasesService service, CasesMapper mapper){this.service=service; this.mapper=mapper;}</span>
+    @Override public ResponseEntity&lt;com.bamartrod.monolith.interfaces.cases.api.model.Cases&gt; getCases(String id, String xCorrelationId){
+<span class="fc" id="L26">        var cid=CorrelationContext.resolve(xCorrelationId);</span>
+<span class="fc" id="L27">        return ResponseDispatcher.dispatch(service.findCases(id,cid),cid,mapper::toApi);</span>
+    }
+    @Override public ResponseEntity&lt;com.bamartrod.monolith.interfaces.cases.api.model.CasesOrq&gt; getCasesOrq(String id, String xCorrelationId){
+<span class="fc" id="L30">        var cid=CorrelationContext.resolve(xCorrelationId);</span>
+<span class="fc" id="L31">        return ResponseDispatcher.dispatch(service.findOrq(id,cid),cid,mapper::toApi);</span>
+    }
+    @Override public ResponseEntity&lt;com.bamartrod.monolith.interfaces.cases.api.model.CasesSummary&gt; getCasesSummary(String id, String xCorrelationId){
+<span class="fc" id="L34">        var cid=CorrelationContext.resolve(xCorrelationId);</span>
+<span class="fc" id="L35">        return ResponseDispatcher.dispatch(service.findSummary(id,cid),cid,mapper::toApi);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

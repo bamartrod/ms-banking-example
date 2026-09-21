@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientModels.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Modular Monolith - Java 25 (Screaming)</a> &gt; <a href="index.source.html" class="el_package">com.bamartrod.monolith.client</a> &gt; <span class="el_source">ClientModels.java</span></div><h1>ClientModels.java</h1><pre class="source lang-java linenums">package com.bamartrod.monolith.client;
+
+/**
+ * Canonical client models — unified bounded context (clientcore + clientenrichment).
+ * Sealed interface consolidates GeneralInfo, SecureData, Belongs, Destinations, Products.
+ * Factory methods centralize the single-column view mapping (field → typed attributes)
+ * so that the SQL projection (table_id, field) never leaks as r.data() duplication in services.
+ */
+public sealed interface ClientModels
+        permits ClientModels.GeneralInfo, ClientModels.SecureData, ClientModels.Belongs, ClientModels.Destinations, ClientModels.Products {
+
+    String clientId();
+    String correlationId();
+/**
+ * Domain models for Client bounded context — sealed records and factories.
+ *
+ * @author Brandon Martinez
+ */
+
+<span class="fc" id="L20">    record GeneralInfo(String clientId, String correlationId, String documentType, String documentNumber, String status) implements ClientModels {}</span>
+<span class="fc" id="L21">    record SecureData(String clientId, String correlationId, String maskedAccount, String status) implements ClientModels {}</span>
+<span class="fc" id="L22">    record Belongs(String clientId, String correlationId, String documentType, String belongsFlag) implements ClientModels {}</span>
+<span class="fc" id="L23">    record Destinations(String clientId, String correlationId, String destinationCode, boolean active) implements ClientModels {}</span>
+<span class="fc" id="L24">    record Products(String clientId, String correlationId, String productCode, String status) implements ClientModels {}</span>
+
+    static GeneralInfo ofGeneralInfo(String clientId, com.bamartrod.monolith.platform.kernel.CorrelationId cid, String field) {
+<span class="nc" id="L27">        return new GeneralInfo(clientId, cid.value(), field, field, ClientStatus.ACTIVE.name());</span>
+    }
+    /** Rich mapping — column-specific, avoids field duplication for documentType/documentNumber. */
+    static GeneralInfo ofGeneralInfo(String clientId, com.bamartrod.monolith.platform.kernel.CorrelationId cid, String documentType, String documentNumber) {
+<span class="nc" id="L31">        return new GeneralInfo(clientId, cid.value(), documentType, documentNumber, ClientStatus.ACTIVE.name());</span>
+    }
+
+    /**
+     * Canonical RowMapper for CLIENT_VIEW structured projection.
+     * Contrato: columnas document_type, document_number, status (SELECT *). Sin inspección por excepciones.
+     * Para vistas KV legacy usar findById(BiFunction); para vistas estructuradas usar este mapper con query().
+     */
+    static org.springframework.jdbc.core.RowMapper&lt;GeneralInfo&gt; generalInfoMapper(String clientId, com.bamartrod.monolith.platform.kernel.CorrelationId cid) {
+<span class="pc" id="L40">        return (rs, rowNum) -&gt; new GeneralInfo(</span>
+                clientId,
+<span class="nc" id="L42">                cid.value(),</span>
+<span class="nc" id="L43">                rs.getString(&quot;document_type&quot;),</span>
+<span class="nc" id="L44">                rs.getString(&quot;document_number&quot;),</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">                rs.getString(&quot;status&quot;) != null ? rs.getString(&quot;status&quot;) : ClientStatus.ACTIVE.name()</span>
+        );
+    }
+    static SecureData ofSecureData(String clientId, com.bamartrod.monolith.platform.kernel.CorrelationId cid, String field) {
+<span class="fc" id="L49">        return new SecureData(clientId, cid.value(), field, ClientStatus.ACTIVE.name());</span>
+    }
+    static Belongs ofBelongs(String clientId, com.bamartrod.monolith.platform.kernel.CorrelationId cid, String field) {
+<span class="fc" id="L52">        return new Belongs(clientId, cid.value(), field, field);</span>
+    }
+    static Destinations ofDestinations(String clientId, com.bamartrod.monolith.platform.kernel.CorrelationId cid, String field) {
+<span class="fc" id="L55">        return new Destinations(clientId, cid.value(), field, true);</span>
+    }
+    static Products ofProducts(String clientId, com.bamartrod.monolith.platform.kernel.CorrelationId cid, String field) {
+<span class="fc" id="L58">        return new Products(clientId, cid.value(), field, &quot;ACTIVE&quot;);</span>
+    }
+    static com.bamartrod.monolith.client.Client ofClient(String clientId, String field) {
+<span class="nc" id="L61">        return new com.bamartrod.monolith.client.Client(com.bamartrod.monolith.platform.kernel.ClientId.of(clientId), field, field, ClientStatus.ACTIVE);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

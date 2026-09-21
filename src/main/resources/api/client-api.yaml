@@ -1,0 +1,193 @@
+openapi: 3.0.3
+info:
+  title: Client API — unified (core + enrichment) strangler fig
+  description: Unified Client bounded context — collapses clientcore (general, secure-data) + clientenrichment (belongs, destinations, products). Strangler Fig — single canonical contract for com.bamartrod.monolith.client. Replaces interfaces.clientenrichment legacy generation; enrichment-api.yaml kept for backward compat at /api/v1/client-enrichment.
+  version: 1.0.0
+  contact:
+    name: Platform Team — Banco de Bogotá
+    url: https://github.com/banco-bogota/monolith
+    email: platform@bancodebogota.com.co
+  x-implemented-by: com.bamartrod.monolith.client.api
+  x-governance:
+    owner: platform
+    domain: client
+    lifecycle: active
+servers:
+  - url: /api/v1/clients
+    description: Modular monolith server (env-driven, no hardcoded host)
+security:
+  - BearerAuth: [client:read]
+paths:
+  /{id}/general:
+    get:
+      operationId: getClientGeneral
+      tags: [Client]
+      summary: Get client general info (documentType, documentNumber, status)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[A-Za-z0-9_-]{1,64}$' }
+        - $ref: '#/components/parameters/TraceHeader'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ClientGeneral' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /{id}/secure-data:
+    get:
+      operationId: getClientSecureData
+      tags: [Client]
+      summary: Get client secure data (maskedAccount)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[A-Za-z0-9_-]{1,64}$' }
+        - $ref: '#/components/parameters/TraceHeader'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ClientSecureData' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /{id}/belongs:
+    get:
+      operationId: getClientBelongs
+      tags: [Client]
+      summary: Get belongs document (enrichment) — unified under client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[A-Za-z0-9_-]{1,64}$' }
+        - $ref: '#/components/parameters/TraceHeader'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BelongsDocument' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /{id}/destinations:
+    get:
+      operationId: getClientDestinations
+      tags: [Client]
+      summary: Get destinations (enrichment) — unified under client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[A-Za-z0-9_-]{1,64}$' }
+        - $ref: '#/components/parameters/TraceHeader'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Destinations' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /{id}/products:
+    get:
+      operationId: getClientProducts
+      tags: [Client]
+      summary: Get products (enrichment) — unified under client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[A-Za-z0-9_-]{1,64}$' }
+        - $ref: '#/components/parameters/TraceHeader'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Products' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    TraceHeader:
+      name: X-Correlation-Id
+      in: header
+      required: false
+      description: Distributed tracing correlation ID (UUID).
+      schema:
+        type: string
+        example: 550e8400-e29b-41d4-a716-446655440000
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+  schemas:
+    ClientGeneral:
+      type: object
+      required: [clientId, correlationId, documentType, documentNumber, status]
+      properties:
+        clientId: { type: string, example: "123" }
+        correlationId: { type: string }
+        documentType: { type: string, example: "CC" }
+        documentNumber: { type: string, example: "12345" }
+        status: { type: string, example: "ACTIVE" }
+    ClientSecureData:
+      type: object
+      required: [clientId, correlationId, maskedAccount, status]
+      properties:
+        clientId: { type: string, example: "123" }
+        correlationId: { type: string }
+        maskedAccount: { type: string, example: "***1234" }
+        status: { type: string, example: "ACTIVE" }
+    BelongsDocument:
+      type: object
+      required: [clientId, correlationId, documentType, belongsFlag]
+      properties:
+        clientId: { type: string, example: "123" }
+        correlationId: { type: string }
+        documentType: { type: string, example: "CC" }
+        belongsFlag: { type: string, example: "YES" }
+    Destinations:
+      type: object
+      required: [clientId, correlationId, destinationCode, active]
+      properties:
+        clientId: { type: string }
+        correlationId: { type: string }
+        destinationCode: { type: string, example: "DEST-001" }
+        active: { type: boolean, example: true }
+    Products:
+      type: object
+      required: [clientId, correlationId, productCode, status]
+      properties:
+        clientId: { type: string }
+        correlationId: { type: string }
+        productCode: { type: string, example: "PROD-001" }
+        status: { type: string, example: "ACTIVE" }
+    ErrorResponse:
+      type: object
+      required: [category, code, message]
+      properties:
+        category: { type: string, example: "NOT_FOUND" }
+        code: { type: string, example: "MSOC_01" }
+        message: { type: string, example: "Data does not exist for id 123" }
+        description: { type: string }
+        timestamp: { type: string, format: date-time }
+        traceId: { type: string, format: uuid }

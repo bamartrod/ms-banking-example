@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OracleViewReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Modular Monolith - Java 25 (Screaming)</a> &gt; <a href="index.source.html" class="el_package">com.bamartrod.monolith.platform.persistence</a> &gt; <span class="el_source">OracleViewReader.java</span></div><h1>OracleViewReader.java</h1><pre class="source lang-java linenums">package com.bamartrod.monolith.platform.persistence;
+
+import java.util.Optional;
+import java.util.function.BiFunction;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Repository;
+/**
+ * Driven adapter (out) for OracleViewReader — reads data from persistence (Oracle view).
+ *
+ * @author Brandon Martinez
+ */
+
+
+@Repository
+
+public class OracleViewReader {
+    private final JdbcClient jdbc;
+<span class="fc" id="L19">    public OracleViewReader(JdbcClient jdbc){ this.jdbc=jdbc;}</span>
+
+<span class="nc" id="L21">    public record ClientViewRecord(String id, String data){}</span>
+
+    public &lt;T&gt; Optional&lt;T&gt; findById(ViewTarget target, String id, BiFunction&lt;String, String, T&gt; mapper){
+<span class="nc" id="L24">        String sql=&quot;SELECT table_id AS id, field AS data FROM &quot;+target.viewName()+&quot; WHERE table_id = :id&quot;;</span>
+<span class="nc" id="L25">        return jdbc.sql(sql).param(&quot;id&quot;,id).query((rs, rowNum) -&gt; mapper.apply(rs.getString(&quot;id&quot;), rs.getString(&quot;data&quot;))).optional();</span>
+    }
+
+    /**
+     * Proyección rica — permite SELECT * con RowMapper tipado manteniendo allow-list de ViewTarget.
+     * Usar para vistas con columnas diferenciadas (ej. CLIENT_VIEW: document_type, document_number, status).
+     * ViewTarget evita SQL injection: el nombre de la vista nunca proviene de input de usuario.
+     */
+    public &lt;T&gt; Optional&lt;T&gt; query(ViewTarget target, String id, RowMapper&lt;T&gt; mapper){
+<span class="nc" id="L34">        String sql=&quot;SELECT * FROM &quot;+target.viewName()+&quot; WHERE table_id = :id&quot;;</span>
+<span class="nc" id="L35">        return jdbc.sql(sql).param(&quot;id&quot;,id).query(mapper).optional();</span>
+    }
+
+    public Optional&lt;ClientViewRecord&gt; find(ViewTarget target, String id){
+<span class="nc" id="L39">        return findById(target, id, ClientViewRecord::new);</span>
+    }
+
+    public Optional&lt;ClientViewRecord&gt; findInView(String viewName, String id){
+        // Legacy shim — delega a ViewTarget si coincide, sino allow-list manual (para compat)
+<span class="nc bnc" id="L44" title="All 4 branches missed.">        for (ViewTarget v : ViewTarget.values()) if (v.viewName().equals(viewName)) return find(v, id);</span>
+<span class="nc" id="L45">        throw new IllegalArgumentException(&quot;Unknown view: &quot; + viewName);</span>
+    }
+
+    // Delegados tipados — conservados para compatibilidad, ahora delegan a find(ViewTarget)
+<span class="nc" id="L49">    public Optional&lt;ClientViewRecord&gt; findAccount(String id){ return find(ViewTarget.ACCOUNT,id);}</span>
+<span class="nc" id="L50">    public Optional&lt;ClientViewRecord&gt; findSales(String id){ return find(ViewTarget.SALES,id);}</span>
+<span class="nc" id="L51">    public Optional&lt;ClientViewRecord&gt; findCases(String id){ return find(ViewTarget.CASES,id);}</span>
+<span class="nc" id="L52">    public Optional&lt;ClientViewRecord&gt; findMarketing(String id){ return find(ViewTarget.MARKETING,id);}</span>
+<span class="nc" id="L53">    public Optional&lt;ClientViewRecord&gt; findEnrichment(String id){ return find(ViewTarget.ENRICHMENT,id);}</span>
+<span class="nc" id="L54">    public Optional&lt;ClientViewRecord&gt; findClient(String id){ return find(ViewTarget.CLIENT,id);}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

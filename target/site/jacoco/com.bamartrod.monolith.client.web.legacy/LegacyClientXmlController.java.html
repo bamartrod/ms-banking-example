@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LegacyClientXmlController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Modular Monolith - Java 25 (Screaming)</a> &gt; <a href="index.source.html" class="el_package">com.bamartrod.monolith.client.web.legacy</a> &gt; <span class="el_source">LegacyClientXmlController.java</span></div><h1>LegacyClientXmlController.java</h1><pre class="source lang-java linenums">package com.bamartrod.monolith.client.web.legacy;
+
+import com.bamartrod.monolith.client.ClientService;
+import com.bamartrod.monolith.platform.kernel.Result;
+import com.bamartrod.monolith.platform.web.CorrelationContext;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+/**
+ * REST controller for LegacyClientXml bounded context. Handles HTTP requests and delegates to application use cases.
+ *
+ * @author Brandon Martinez
+ */
+
+
+@RestController
+@RequestMapping(path = &quot;${service.controller.path:/ms-client-query}&quot;)
+
+public class LegacyClientXmlController {
+
+    private final ClientService clientService;
+    private final IBRequestParser parser;
+
+<span class="fc" id="L24">    public LegacyClientXmlController(ClientService clientService, IBRequestParser parser) {</span>
+<span class="fc" id="L25">        this.clientService = clientService;</span>
+<span class="fc" id="L26">        this.parser = parser;</span>
+<span class="fc" id="L27">    }</span>
+
+    @PostMapping(path = &quot;/client/secure_data&quot;, consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
+    public ResponseEntity&lt;String&gt; secureData(@RequestBody String rawXml,
+                                             @RequestHeader(value = &quot;X-Correlation-Id&quot;, required = false) String header) {
+<span class="fc" id="L32">        var cid = CorrelationContext.resolve(header);</span>
+<span class="fc" id="L33">        var payload = parser.extractSecureDataPayload(rawXml);</span>
+<span class="fc" id="L34">        var result = clientService.findSecureData(payload.nit(), cid);</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        return switch (result) {</span>
+<span class="fc" id="L36">            case Result.Success(var data) -&gt; ResponseEntity.ok().header(&quot;X-Correlation-Id&quot;, cid.value()).body(parser.toSecureDataResponse(data.maskedAccount()));</span>
+<span class="fc" id="L37">            case Result.Failure(var err) -&gt; ResponseEntity.status(err.httpStatus()).header(&quot;X-Correlation-Id&quot;, cid.value()).body(parser.toNotFoundResponse(err.code()));</span>
+        };
+    }
+
+    @PostMapping(path = &quot;/client/general&quot;, consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
+    public ResponseEntity&lt;String&gt; general(@RequestBody String rawXml,
+                                          @RequestHeader(value = &quot;X-Correlation-Id&quot;, required = false) String header) {
+<span class="fc" id="L44">        var cid = CorrelationContext.resolve(header);</span>
+<span class="fc" id="L45">        var payload = parser.extractSecureDataPayload(rawXml);</span>
+<span class="fc" id="L46">        var result = clientService.findGeneralInfo(payload.nit(), cid);</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        return switch (result) {</span>
+<span class="fc" id="L48">            case Result.Success(var data) -&gt; ResponseEntity.ok().header(&quot;X-Correlation-Id&quot;, cid.value()).body(parser.toSecureDataResponse(data.documentNumber()));</span>
+<span class="nc" id="L49">            case Result.Failure(var err) -&gt; ResponseEntity.status(err.httpStatus()).header(&quot;X-Correlation-Id&quot;, cid.value()).body(parser.toNotFoundResponse(err.code()));</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
