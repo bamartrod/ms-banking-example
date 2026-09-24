@@ -175,8 +175,4 @@ All production classes are documented in English with:
  *
  * @author Brandon Martinez
  */
-```
-
-## License
-
-Internal example for Banco de Bogotá — not for production use without review.
+``
